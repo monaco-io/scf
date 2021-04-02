@@ -1,0 +1,5 @@
+# github.com/tencentyun/scf-go-lib v0.0.0-20200624065115-ba679e2ec9c9
+## explicit
+github.com/tencentyun/scf-go-lib/cloudfunction
+github.com/tencentyun/scf-go-lib/cloudfunction/messages
+github.com/tencentyun/scf-go-lib/functioncontext
