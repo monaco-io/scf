@@ -16,13 +16,7 @@ var (
 )
 
 func init() {
-	var err error
-
-	conf, err := f.ReadFile(path.Join("conf", env()+".yaml"))
-	panicError(err)
-
-	err = yaml.Unmarshal(conf, &Config)
-	panicError(err)
+	Init()
 }
 
 func env() string {
@@ -31,6 +25,16 @@ func env() string {
 		return "dev"
 	}
 	return env
+}
+
+func Init() {
+	var err error
+
+	conf, err := f.ReadFile(path.Join("conf", env()+".yaml"))
+	panicError(err)
+
+	err = yaml.Unmarshal(conf, &Config)
+	panicError(err)
 }
 
 type _Config struct {

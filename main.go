@@ -2,8 +2,10 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"log"
 	"os"
+	"scf/config"
 	"scf/handler"
 	"time"
 
@@ -18,15 +20,15 @@ type EventTimer struct {
 }
 
 type EventHttp struct {
-	HeaderParameters      interface{}    `json:"headerParameters"`
-	Headers               Headers        `json:"headers"`
 	HTTPMethod            string         `json:"httpMethod"`
-	IsBase64Encoded       bool           `json:"isBase64Encoded"`
 	Path                  string         `json:"path"`
+	Headers               Headers        `json:"headers"`
 	PathParameters        interface{}    `json:"pathParameters"`
 	QueryString           interface{}    `json:"queryString"`
 	QueryStringParameters interface{}    `json:"queryStringParameters"`
+	HeaderParameters      interface{}    `json:"headerParameters"`
 	RequestContext        RequestContext `json:"requestContext"`
+	IsBase64Encoded       bool           `json:"isBase64Encoded"`
 }
 
 type Headers struct {
@@ -51,26 +53,47 @@ type RequestContext struct {
 
 func _handler(ctx context.Context, event interface{}) (resp interface{}, err error) {
 	os.Setenv("APP_ENV", "prod")
-	log.Printf("event: %+v", event)
-	switch e := event.(type) {
-	case EventTimer:
-		log.Println("TriggerName", e.TriggerName, "Type", e.Type)
-		switch e.TriggerName {
-		case "bilibili_weekly_remind":
-			return handler.BilibiliWeeklyRemind(ctx, event)
+	config.Init()
+
+	var (
+		eHttp   EventHttp
+		eTimer  EventTimer
+		success = func() bool {
+			return err == nil
 		}
-	case EventHttp:
-		log.Println("Method", e.HTTPMethod, "Path", e.Path)
-		switch e.Path {
+	)
+
+	j, _ := json.Marshal(event)
+
+	err = json.Unmarshal(j, &eHttp)
+	if success() && eHttp.HTTPMethod != "" {
+		log.Println("Method", eHttp.HTTPMethod, "Path", eHttp.Path)
+		switch eHttp.Path {
 		case "/gogo/bilibili_weekly_remind":
 			return handler.BilibiliWeeklyRemind(ctx, event)
 		case "/gogo/http":
 			return handler.HTTPSource(ctx, event)
 		case "/gogo/alwd":
 			return handler.ALWD(ctx, event)
+		default:
+			log.Printf("unknown method: %+v", eHttp)
+			return
 		}
 	}
 
+	err = json.Unmarshal(j, &eTimer)
+	if success() && eTimer.TriggerName != "" {
+		log.Println("TriggerName", eTimer.TriggerName, "Type", eTimer.Type)
+		switch eTimer.TriggerName {
+		case "bilibili_weekly_remind":
+			return handler.BilibiliWeeklyRemind(ctx, event)
+		default:
+			log.Printf("unknown timer: %+v", eTimer)
+			return
+		}
+	}
+
+	log.Printf("unknown event: %+v", event)
 	return
 }
 
