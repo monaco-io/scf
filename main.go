@@ -5,11 +5,19 @@ import (
 	"log"
 	"os"
 	"scf/handler"
+	"time"
 
 	"github.com/tencentyun/scf-go-lib/cloudfunction"
 )
 
-type Event struct {
+type EventTimer struct {
+	Type        string
+	TriggerName string
+	Time        time.Time
+	Message     string
+}
+
+type EventHttp struct {
 	HeaderParameters      interface{}    `json:"headerParameters"`
 	Headers               Headers        `json:"headers"`
 	HTTPMethod            string         `json:"httpMethod"`
@@ -41,18 +49,26 @@ type RequestContext struct {
 	Stage      string      `json:"stage"`
 }
 
-func _handler(ctx context.Context, event Event) (resp interface{}, err error) {
-	log.Println("Method", event.HTTPMethod, "Path", event.Path)
-
+func _handler(ctx context.Context, event interface{}) (resp interface{}, err error) {
 	os.Setenv("APP_ENV", "prod")
 
-	switch event.Path {
-	case "/gogo/bilibili_weekly_remind":
-		return handler.BilibiliWeeklyRemind(ctx, event)
-	case "/gogo/http":
-		return handler.HTTPSource(ctx, event)
-	case "/gogo/alwd":
-		return handler.ALWD(ctx, event)
+	switch e := event.(type) {
+	case EventTimer:
+		log.Println("TriggerName", e.TriggerName, "Type", e.Type)
+		switch e.TriggerName {
+		case "bilibili_weekly_remind":
+			return handler.BilibiliWeeklyRemind(ctx, event)
+		}
+	case EventHttp:
+		log.Println("Method", e.HTTPMethod, "Path", e.Path)
+		switch e.Path {
+		case "/gogo/bilibili_weekly_remind":
+			return handler.BilibiliWeeklyRemind(ctx, event)
+		case "/gogo/http":
+			return handler.HTTPSource(ctx, event)
+		case "/gogo/alwd":
+			return handler.ALWD(ctx, event)
+		}
 	}
 
 	return
