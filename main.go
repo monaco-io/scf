@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 	"scf/handler"
 
 	"github.com/tencentyun/scf-go-lib/cloudfunction"
@@ -43,7 +44,11 @@ type RequestContext struct {
 func _handler(ctx context.Context, event Event) (resp interface{}, err error) {
 	log.Println("Method", event.HTTPMethod, "Path", event.Path)
 
+	os.Setenv("APP_ENV", "prod")
+
 	switch event.Path {
+	case "/gogo/bilibili_weekly_remind":
+		return handler.BilibiliWeeklyRemind(ctx, event)
 	case "/gogo/http":
 		return handler.HTTPSource(ctx, event)
 	case "/gogo/alwd":
