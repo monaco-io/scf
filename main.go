@@ -51,7 +51,7 @@ type RequestContext struct {
 
 func _handler(ctx context.Context, event interface{}) (resp interface{}, err error) {
 	os.Setenv("APP_ENV", "prod")
-
+	log.Printf("event: %+v", event)
 	switch e := event.(type) {
 	case EventTimer:
 		log.Println("TriggerName", e.TriggerName, "Type", e.Type)
