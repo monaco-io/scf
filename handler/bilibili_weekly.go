@@ -22,7 +22,7 @@ func remindNextWeekOwner(name, mobile string) {
 }
 
 func BilibiliWeeklyRemind(ctx context.Context, event interface{}) (resp interface{}, err error) {
-	const offset = 11
+	const offset = 12
 
 	day20210101 := time.Date(2021, time.January, 0, 0, 0, 0, 0, time.UTC)
 	now := time.Since(day20210101)
