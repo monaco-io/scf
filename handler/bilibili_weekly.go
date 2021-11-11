@@ -9,20 +9,24 @@ import (
 	"time"
 )
 
-func remindCurrentWeekOwner(name, mobile string) {
-	msg := fmt.Sprintf("亲爱的 [周会主持人 - %s]:\n今天是星期三, 要准备周会啦", name)
-	log.Println(msg)
-	pkg.WeComWebHookTextMsg(config.Config.BilibiliWeekly.RobotURL, msg, nil, []string{mobile})
-}
+func remindCurrentWeekOwner(name, mobile, name2, mobile2 string) {
+	var (
+		title  = "本周周会信息:\n"
+		holder = fmt.Sprintf("主持人 - %s\n请整理好周会所需文档, 更新群公告\n", name)
+		todo   = fmt.Sprintf("\n土豆记录 - %s\n请预定下周周会会议室\n", name2)
+	)
 
-func remindNextWeekOwner(name, mobile string) {
-	msg := fmt.Sprintf("亲爱的 [土豆记录小助手 - %s]:\n今天是星期三, 要准备周会啦", name)
+	msg := fmt.Sprintf("%s\n%s", title, holder)
+	if time.Now().Weekday() == time.Thursday {
+		msg += todo
+	}
+	msg += "\n"
 	log.Println(msg)
-	pkg.WeComWebHookTextMsg(config.Config.BilibiliWeekly.RobotURL, msg, nil, []string{mobile})
+	pkg.WeComWebHookTextMsg(config.Config.BilibiliWeekly.RobotURL, msg, nil, []string{mobile, mobile2})
 }
 
 func BilibiliWeeklyRemind(ctx context.Context, event interface{}) (resp interface{}, err error) {
-	const offset = 12
+	const offset = 6
 
 	day20210101 := time.Date(2021, time.January, 0, 0, 0, 0, 0, time.UTC)
 	now := time.Since(day20210101)
@@ -38,8 +42,7 @@ func BilibiliWeeklyRemind(ctx context.Context, event interface{}) (resp interfac
 	nextUser := config.Config.BilibiliWeekly.Users[nextIndex]
 
 	// send remind wecom msg
-	remindCurrentWeekOwner(user.Name, user.Mobile)
-	remindNextWeekOwner(nextUser.Name, nextUser.Mobile)
+	remindCurrentWeekOwner(user.Name, user.Mobile, nextUser.Name, nextUser.Mobile)
 
 	resp = event
 	return
