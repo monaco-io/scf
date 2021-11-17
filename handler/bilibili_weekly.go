@@ -14,19 +14,21 @@ func remindCurrentWeekOwner(name, mobile, name2, mobile2 string) {
 		title  = "本周周会信息:\n"
 		holder = fmt.Sprintf("主持人 - %s\n请整理好周会所需文档, 更新群公告\n", name)
 		todo   = fmt.Sprintf("\n土豆记录 - %s\n请预定下周周会会议室\n", name2)
+		mob    = []string{mobile}
 	)
 
 	msg := fmt.Sprintf("%s\n%s", title, holder)
 	if time.Now().Weekday() == time.Thursday {
 		msg += todo
+		mob = append(mob, mobile2)
 	}
 	msg += "\n"
 	log.Println(msg)
-	pkg.WeComWebHookTextMsg(config.Config.BilibiliWeekly.RobotURL, msg, nil, []string{mobile, mobile2})
+	pkg.WeComWebHookTextMsg(config.Config.BilibiliWeekly.RobotURL, msg, nil, mob)
 }
 
 func BilibiliWeeklyRemind(ctx context.Context, event interface{}) (resp interface{}, err error) {
-	const offset = 6
+	const offset = 7
 
 	day20210101 := time.Date(2021, time.January, 0, 0, 0, 0, 0, time.UTC)
 	now := time.Since(day20210101)
