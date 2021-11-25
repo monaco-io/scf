@@ -9,6 +9,15 @@ import (
 	"time"
 )
 
+var (
+	hour8   = 60 * 60 * 8
+	localCN = time.FixedZone("UTC+8", hour8)
+)
+
+func nowCN() time.Time {
+	return time.Now().UTC().In(localCN)
+}
+
 func remindCurrentWeekOwner(name, mobile, name2, mobile2 string) {
 	var (
 		title  = "本周周会信息:\n"
@@ -16,9 +25,8 @@ func remindCurrentWeekOwner(name, mobile, name2, mobile2 string) {
 		todo   = fmt.Sprintf("\n土豆记录 - %s\n请预定下周周会会议室\n", name2)
 		mob    = []string{mobile}
 	)
-
 	msg := fmt.Sprintf("%s\n%s", title, holder)
-	if time.Now().Weekday() == time.Thursday {
+	if nowCN().Weekday() == time.Thursday {
 		msg += todo
 		mob = append(mob, mobile2)
 	}
@@ -28,9 +36,9 @@ func remindCurrentWeekOwner(name, mobile, name2, mobile2 string) {
 }
 
 func BilibiliWeeklyRemind(ctx context.Context, event interface{}) (resp interface{}, err error) {
-	const offset = 0
+	const offset = 13
 
-	day20210101 := time.Date(2021, time.January, 0, 0, 0, 0, 0, time.UTC)
+	day20210101 := time.Date(2021, time.January, 0, 0, 0, 0, 0, localCN)
 	now := time.Since(day20210101)
 	aWeek := time.Hour * 24 * 7
 	weekSinceDay20210101 := int(now.Hours() / aWeek.Hours())
