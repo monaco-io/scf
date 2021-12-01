@@ -12,6 +12,8 @@ import (
 var (
 	hour8   = 60 * 60 * 8
 	localCN = time.FixedZone("UTC+8", hour8)
+	aDay    = time.Hour * 24
+	aWeek   = aDay * 7
 )
 
 func nowCN() time.Time {
@@ -32,15 +34,15 @@ func remindCurrentWeekOwner(name, mobile, name2, mobile2 string) {
 	}
 	msg += "\n"
 	log.Println(msg)
+	return
 	pkg.WeComWebHookTextMsg(config.Config.BilibiliWeekly.RobotURL, msg, nil, mob)
 }
 
 func BilibiliWeeklyRemind(ctx context.Context, event interface{}) (resp interface{}, err error) {
-	const offset = 13
+	const offset = 3
 
-	day20210101 := time.Date(2021, time.January, 0, 0, 0, 0, 0, localCN)
+	day20210101 := time.Date(2021, time.January, 4, 0, 0, 0, 0, localCN)
 	now := time.Since(day20210101)
-	aWeek := time.Hour * 24 * 7
 	weekSinceDay20210101 := int(now.Hours() / aWeek.Hours())
 
 	// current week user
