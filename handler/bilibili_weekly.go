@@ -34,7 +34,6 @@ func remindCurrentWeekOwner(name, mobile, name2, mobile2 string) {
 	}
 	msg += "\n"
 	log.Println(msg)
-	return
 	pkg.WeComWebHookTextMsg(config.Config.BilibiliWeekly.RobotURL, msg, nil, mob)
 }
 
