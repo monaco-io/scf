@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"flag"
 	"log"
 	"os"
 	"scf/config"
@@ -105,6 +106,17 @@ func _handler(ctx context.Context, event interface{}) (resp interface{}, err err
 }
 
 func main() {
-	// Make the handler available for Remote Procedure Call by Cloud Function
-	cloudfunction.Start(_handler)
+	var (
+		app = flag.String("app", "", "loli")
+	)
+	flag.Parse()
+	switch *app {
+	case "setu":
+		log.Println("app=setu")
+		_handler(context.Background(), EventTimer{TriggerName: "setu"})
+	default:
+		log.Println("app=default")
+		// Make the handler available for Remote Procedure Call by Cloud Function
+		cloudfunction.Start(_handler)
+	}
 }
