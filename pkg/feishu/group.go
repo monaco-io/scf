@@ -24,6 +24,27 @@ func GetRobotGroups(appID, appSecrect string) (groups []GroupItem, err error) {
 	return
 }
 
+func SearchRobotGroups(appID, appSecrect string) (groups []GroupItem, err error) {
+	token, err := GetTenantToken(appID, appSecrect)
+	if err != nil {
+		return
+	}
+	for flag := true; flag; {
+		var resp GetRobotGroupsResponse
+		c := request.Client{
+			URL:    searchRobotGroups,
+			Bearer: token.TenantAccessToken,
+			Query: map[string]string{
+				"query": "",
+			},
+		}
+		_ = c.Send().Scan(&resp)
+		groups = append(groups, resp.Data.Items...)
+		flag = resp.Data.HasMore
+	}
+	return
+}
+
 func GetRobotGroupsSetu() (groups []GroupItem, err error) {
 	data, err := GetRobotGroups(config.Config.Setu.FsBot.AppID, config.Config.Setu.FsBot.AppSecrect)
 	if err != nil {

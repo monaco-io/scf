@@ -6,4 +6,5 @@ const (
 	sendMessageURL      = "https://open.feishu.cn/open-apis/im/v1/messages"
 	sendMessageBatchURL = "https://open.feishu.cn/open-apis/message/v4/batch_send"
 	getRobotGroups      = "https://open.feishu.cn/open-apis/im/v1/chats"
+	searchRobotGroups   = "https://open.feishu.cn/open-apis/im/v1/chats/search"
 )

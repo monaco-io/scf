@@ -3,6 +3,7 @@ package setu
 // doc: https://api.lolicon.app
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 	"scf/config"
@@ -74,7 +75,7 @@ func GetPic() (pic Picture, err error) {
 	log.Printf("INFO resp: %+v", resp)
 
 	if len(resp.Data) > 0 {
-		pic.Title = resp.Data[0].Title
+		pic.Title = fmt.Sprintf("%s-%s-%d", resp.Data[0].Author, resp.Data[0].Title, resp.Data[0].PID)
 		pic.Tags = resp.Data[0].Tags
 		pic.URL = resp.Data[0].URLs.Original
 		pic.Ext = resp.Data[0].Ext

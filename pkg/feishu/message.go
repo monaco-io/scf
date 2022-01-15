@@ -9,11 +9,24 @@ import (
 )
 
 func SendSetuMessage(chatID, imageKey string) (resp SendMessageResponse, err error) {
+	content := fmt.Sprintf(`{"image_key":"%s"}`, imageKey)
+	externals := config.Config.Setu.FsBot.ExternalGroups
+	for _, v := range externals {
+		query := map[string]string{
+			"msg_type": "image",
+			"content":  content,
+		}
+		c := request.Client{
+			URL:   v,
+			Query: query,
+		}
+		_ = c.Send()
+	}
 	in := SendMessageRequest{
 		ReceiveIDType: "chat_id",
 		Body: SendMessageRequest_Body{
 			ReceiveID:    chatID,
-			Content:      fmt.Sprintf(`{"image_key":"%s"}`, imageKey),
+			Content:      content,
 			MesssageType: "image",
 		},
 	}

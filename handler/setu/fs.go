@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/fs"
 	"io/ioutil"
+	"os"
 	"scf/config"
 	"time"
 
@@ -21,7 +22,9 @@ func SaveToTmpFile(pic Picture) (fPath string, err error) {
 		fName = uuid.NewString()
 	}
 	fPath = fmt.Sprintf("%s/%s.%s", tmpDir, fName, pic.Ext)
-
+	if fileExists(fPath) {
+		return
+	}
 	c := request.Client{
 		URL:         pic.URL,
 		Timeout:     time.Minute,
@@ -39,4 +42,9 @@ func SaveToTmpFile(pic Picture) (fPath string, err error) {
 	}
 	err = ioutil.WriteFile(fPath, resp.Bytes(), fs.ModePerm)
 	return
+}
+
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	return !os.IsNotExist(err)
 }
