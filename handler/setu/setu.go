@@ -4,6 +4,7 @@ package setu
 import (
 	"context"
 	"log"
+	"os"
 	"scf/config"
 	"scf/pkg/feishu"
 
@@ -18,7 +19,9 @@ func Handler(ctx context.Context, event interface{}) (resp interface{}, err erro
 	}
 	picPath, err := SaveToTmpFile(pic)
 	log.Printf("INFO download pic %s %v", picPath, err)
-	// defer os.Remove(picPath)
+	if config.Config.Setu.CacheDir == "" {
+		defer os.Remove(picPath)
+	}
 	if err != nil {
 		err = errors.Wrap(err, "SaveToTmpFile(pic)")
 		return

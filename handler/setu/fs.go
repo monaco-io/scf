@@ -1,8 +1,10 @@
 package setu
 
 import (
+	"fmt"
 	"io/fs"
 	"io/ioutil"
+	"scf/config"
 	"time"
 
 	"github.com/google/uuid"
@@ -10,7 +12,16 @@ import (
 )
 
 func SaveToTmpFile(pic Picture) (fPath string, err error) {
-	fPath = "/tmp/" + uuid.NewString() + "." + pic.Ext
+	tmpDir := config.Config.Setu.CacheDir
+	if tmpDir != "" {
+		tmpDir = "/tmp"
+	}
+	fName := pic.Title
+	if fName == "" {
+		fName = uuid.NewString()
+	}
+	fPath = fmt.Sprintf("%s/%s.%s", tmpDir, fName, pic.Ext)
+
 	c := request.Client{
 		URL:         pic.URL,
 		Timeout:     time.Minute,
