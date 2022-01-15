@@ -13,7 +13,7 @@ import (
 
 func SaveToTmpFile(pic Picture) (fPath string, err error) {
 	tmpDir := config.Config.Setu.CacheDir
-	if tmpDir != "" {
+	if tmpDir == "" {
 		tmpDir = "/tmp"
 	}
 	fName := pic.Title
