@@ -6,7 +6,10 @@ import (
 	"log"
 	"os"
 	"scf/config"
-	"scf/handler"
+	"scf/handler/alwd"
+	"scf/handler/biliweekly"
+	xhttp "scf/handler/http"
+	"scf/handler/setu"
 	"time"
 
 	"github.com/tencentyun/scf-go-lib/cloudfunction"
@@ -70,11 +73,13 @@ func _handler(ctx context.Context, event interface{}) (resp interface{}, err err
 		log.Println("Method", eHttp.HTTPMethod, "Path", eHttp.Path)
 		switch eHttp.Path {
 		case "/gogo/bilibili_weekly_remind":
-			return handler.BilibiliWeeklyRemind(ctx, event)
+			return biliweekly.Handler(ctx, event)
 		case "/gogo/http":
-			return handler.HTTPSource(ctx, event)
+			return xhttp.Handler(ctx, event)
 		case "/gogo/alwd":
-			return handler.ALWD(ctx, event)
+			return alwd.Handler(ctx, event)
+		case "/gogo/setu":
+			return setu.Handler(ctx, event)
 		default:
 			log.Printf("unknown method: %+v", eHttp)
 			return
@@ -86,7 +91,9 @@ func _handler(ctx context.Context, event interface{}) (resp interface{}, err err
 		log.Println("TriggerName", eTimer.TriggerName, "Type", eTimer.Type)
 		switch eTimer.TriggerName {
 		case "bilibili_weekly_remind":
-			return handler.BilibiliWeeklyRemind(ctx, event)
+			return biliweekly.Handler(ctx, event)
+		case "setu":
+			return setu.Handler(ctx, event)
 		default:
 			log.Printf("unknown timer: %+v", eTimer)
 			return

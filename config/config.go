@@ -39,6 +39,7 @@ func Init() {
 
 type _Config struct {
 	BilibiliWeekly bilibliWeekly `yaml:"bilibili_weekly"`
+	Setu           setu          `yaml:"setu"`
 }
 
 type bilibliWeekly struct {
@@ -46,9 +47,21 @@ type bilibliWeekly struct {
 	Users    []user `yaml:"users"`
 }
 
+type setu struct {
+	R18   int64  `yaml:"r18"`
+	Proxy string `yaml:"proxy"`
+	URL   string `yaml:"url"`
+	FsBot fsBot  `yaml:"fs_bot"`
+}
 type user struct {
 	Name   string `yaml:"name"`
 	Mobile string `yaml:"mobile"`
+}
+
+type fsBot struct {
+	URL        string `yaml:"url"`
+	AppID      string `yaml:"app_id"`
+	AppSecrect string `yaml:"app_secrect"`
 }
 
 func panicError(err error) {
