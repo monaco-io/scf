@@ -13,6 +13,7 @@ import (
 	"scf/handler/setu"
 	"time"
 
+	"github.com/robfig/cron/v3"
 	"github.com/tencentyun/scf-go-lib/cloudfunction"
 )
 
@@ -110,13 +111,21 @@ func main() {
 		app = flag.String("app", "", "loli")
 	)
 	flag.Parse()
+
 	switch *app {
 	case "setu":
 		log.Println("app=setu")
-		_handler(context.Background(), EventTimer{TriggerName: "setu"})
+		c := cron.New()
+		_, err := c.AddFunc("*/30 10-19 * * *", func() { _handler(context.Background(), EventTimer{TriggerName: "setu"}) })
+		if err != nil {
+			log.Fatal(err)
+		}
+		c.Start()
 	default:
 		log.Println("app=default")
 		// Make the handler available for Remote Procedure Call by Cloud Function
 		cloudfunction.Start(_handler)
+		return
 	}
+	select {}
 }
