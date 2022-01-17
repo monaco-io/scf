@@ -1,0 +1,18 @@
+bilibili_weekly:
+  robot_url: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=xxx"
+  users:
+    - name: "xxx"
+      mobile: "xxx"
+    - name: "xxx"
+      mobile: "xxx"
+
+setu:
+  cache_dir: ""
+  r18: 2
+  proxy: null
+  fs_bot:
+    app_id: "xxx"
+    app_secrect: "xxx"
+    external_groups:
+      - "xxx"
+      - "xxx"
