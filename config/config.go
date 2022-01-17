@@ -51,7 +51,6 @@ type setu struct {
 	CacheDir string `yaml:"cache_dir"`
 	R18      int64  `yaml:"r18"`
 	Proxy    string `yaml:"proxy"`
-	URL      string `yaml:"url"`
 	FsBot    fsBot  `yaml:"fs_bot"`
 }
 type user struct {
