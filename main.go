@@ -111,7 +111,8 @@ func main() {
 		app = flag.String("app", "", "loli")
 	)
 	flag.Parse()
-
+	log.Println(config.Config.Setu.CacheDir)
+	return
 	switch *app {
 	case "setu":
 		log.Println("app=setu")

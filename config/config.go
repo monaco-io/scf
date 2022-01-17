@@ -60,7 +60,6 @@ type user struct {
 }
 
 type fsBot struct {
-	URL            string   `yaml:"url"`
 	AppID          string   `yaml:"app_id"`
 	AppSecrect     string   `yaml:"app_secrect"`
 	ExternalGroups []string `yaml:"external_groups"`
