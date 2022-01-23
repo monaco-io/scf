@@ -116,7 +116,7 @@ func main() {
 	case "setu":
 		log.Println("app=setu")
 		c := cron.New()
-		_, err := c.AddFunc("*/30 10-19 * * *", func() { _handler(context.Background(), EventTimer{TriggerName: "setu"}) })
+		_, err := c.AddFunc("0 10-19/4 * * *", func() { _handler(context.Background(), EventTimer{TriggerName: "setu"}) })
 		if err != nil {
 			log.Fatal(err)
 		}
