@@ -38,7 +38,7 @@ func remindCurrentWeekOwner(name, mobile, name2, mobile2 string) {
 }
 
 func Handler(ctx context.Context, event interface{}) (resp interface{}, err error) {
-	const offset = 3
+	const offset = 5
 
 	day20210101 := time.Date(2021, time.January, 4, 0, 0, 0, 0, localCN)
 	now := time.Since(day20210101)
