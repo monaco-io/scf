@@ -3,3 +3,6 @@ dev.yaml
 
 vendor
 images
+
+main
+scp.sh
