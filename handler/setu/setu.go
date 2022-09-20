@@ -60,6 +60,7 @@ func GetPic() (pic Picture, err error) {
 	req.R18 = config.Config.Setu.R18
 	req.Size = AllSize
 	req.Proxy = config.Config.Setu.Proxy
+	req.Num = 1
 
 	c := request.Client{
 		URL:    SeTuURL,
